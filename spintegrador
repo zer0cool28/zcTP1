@@ -1,1 +1,22 @@
 
+
+Stored Procedures :
+
+SP_MateriaBXP : Este sp ejecuta por paramentro usando el nombre de la materia para mostrar todos los alumnos inscriptos
+a la misma.
+
+
+
+Views  :
+
+VW_ListaAxM : Esta vista muestra todos los alumnos con su lejado por materia.
+
+
+
+Triggers :
+
+TGR_AI_NuevoUsuario : este trigger permite al insertar un nuevo alumno crear un nuevo Usuario donde su NombreUsuario es el
+lejago y la contraseña es el DNI.
+
+
+ 
