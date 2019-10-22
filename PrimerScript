@@ -1,0 +1,744 @@
+USE [e-lerning]
+GO
+/****** Object:  Table [dbo].[AlumnoXmateria]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AlumnoXmateria](
+	[id_alumno] [int] NOT NULL,
+	[id_materia] [int] NOT NULL,
+ CONSTRAINT [PK_AlumnoXmateria] PRIMARY KEY CLUSTERED 
+(
+	[id_alumno] ASC,
+	[id_materia] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Alumno]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Alumno](
+	[legajo] [int] IDENTITY(1,1) NOT NULL,
+	[apellido] [varchar](50) NOT NULL,
+	[nombre] [varchar](50) NOT NULL,
+	[DNI] [int] NOT NULL,
+ CONSTRAINT [PK_Alumno] PRIMARY KEY CLUSTERED 
+(
+	[legajo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Materia]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Materia](
+	[id_materia] [int] IDENTITY(1,1) NOT NULL,
+	[nombre] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Materia] PRIMARY KEY CLUSTERED 
+(
+	[id_materia] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[VW_ListaAxM]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/*muestra todos los alumnos inscriptos con sus respectivas materias*/
+CREATE VIEW [dbo].[VW_ListaAxM]
+AS
+SELECT        a.nombre + ',' + a.apellido AS Alumno, a.legajo, m.nombre AS Materia
+FROM            dbo.Alumno AS a INNER JOIN
+                         dbo.AlumnoXmateria AS am ON a.legajo = am.id_alumno INNER JOIN
+                         dbo.Materia AS m ON am.id_materia = m.id_materia
+GO
+/****** Object:  Table [dbo].[Descarga]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Descarga](
+	[id_descarga] [int] IDENTITY(1,1) NOT NULL,
+	[fechaDescarga] [datetime] NOT NULL,
+	[id_alumno] [int] NULL,
+	[id_recurso] [int] NOT NULL,
+ CONSTRAINT [PK_Descarga] PRIMARY KEY CLUSTERED 
+(
+	[id_descarga] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Material]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Material](
+	[id_material] [int] IDENTITY(1,1) NOT NULL,
+	[nombre] [varchar](50) NULL,
+	[descripcion] [varchar](50) NULL,
+ CONSTRAINT [PK_Material] PRIMARY KEY CLUSTERED 
+(
+	[id_material] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Profesor]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Profesor](
+	[matricula] [int] IDENTITY(1,1) NOT NULL,
+	[apellido] [varchar](50) NOT NULL,
+	[nombre] [varchar](50) NOT NULL,
+	[telefono] [varchar](50) NULL,
+	[email] [varchar](50) NULL,
+	[dni] [int] NOT NULL,
+ CONSTRAINT [PK_Profesor] PRIMARY KEY CLUSTERED 
+(
+	[matricula] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ProfesorXmateria]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ProfesorXmateria](
+	[id_profesor] [int] NOT NULL,
+	[id_materia] [int] NOT NULL,
+ CONSTRAINT [PK_ProfesorXmateria] PRIMARY KEY CLUSTERED 
+(
+	[id_profesor] ASC,
+	[id_materia] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Recurso]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Recurso](
+	[id_recurso] [int] IDENTITY(1,1) NOT NULL,
+	[id_materia] [int] NOT NULL,
+	[id_material] [int] NOT NULL,
+	[archivo] [varchar](250) NOT NULL,
+	[estado] [bit] NULL,
+ CONSTRAINT [PK_Recurso] PRIMARY KEY CLUSTERED 
+(
+	[id_recurso] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Usuario]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Usuario](
+	[nombreUsuario] [int] NOT NULL,
+	[PASS] [int] NOT NULL,
+ CONSTRAINT [PK_Table_1] PRIMARY KEY CLUSTERED 
+(
+	[PASS] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[Alumno] ON 
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (1, N'Acuña', N'Juliana', 25689956)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (2, N'Alvarado', N'Eduardo', 29963589)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (3, N'Arenales', N'Ingrid', 30256987)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (4, N'Barajas', N'Julian', 31569852)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (5, N'Basto', N'Karen', 22589331)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (6, N'Bermudez', N'Daniel', 36555421)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (7, N'Buitrago', N'Damian', 31554269)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (8, N'Caceres', N'Silvia', 34521658)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (9, N'Delgado', N'Jhonathan', 36525841)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (10, N'Gamboa', N'Mauricio', 31654258)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (11, N'Garcia', N'Cristian', 34752169)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (12, N'Gonzales', N'Gonzalo', 36564982)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (13, N'Hernandez', N'Hedgar', 25451525)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (14, N'Acevedo', N'Omar', 35569855)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (15, N'Ortega', N'Elizabeth', 37825666)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (16, N'Velazco', N'Sofia', 38554263)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (17, N'Maldonado', N'Santiago', 36666666)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (18, N'Serrano', N'Alexis', 26598632)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (19, N'Schneider', N'Adolfo', 38854126)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (20, N'Bottero', N'Juliana', 34521653)
+GO
+INSERT [dbo].[Alumno] ([legajo], [apellido], [nombre], [DNI]) VALUES (21, N'Morero', N'Marcelo', 26539841)
+GO
+SET IDENTITY_INSERT [dbo].[Alumno] OFF
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (1, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (1, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (1, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (1, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (1, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (1, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (2, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (2, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (2, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (2, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (2, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (2, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (3, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (3, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (3, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (3, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (3, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (3, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (4, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (4, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (4, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (4, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (4, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (4, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (5, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (5, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (5, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (5, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (5, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (5, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (6, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (6, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (6, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (6, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (6, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (6, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (7, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (7, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (7, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (7, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (7, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (7, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (8, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (8, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (8, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (8, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (8, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (8, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (9, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (9, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (9, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (9, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (9, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (9, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (10, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (10, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (10, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (10, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (10, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (10, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (11, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (11, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (11, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (11, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (11, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (11, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (12, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (12, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (12, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (12, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (12, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (12, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (13, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (13, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (13, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (13, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (13, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (13, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (14, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (14, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (14, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (14, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (14, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (14, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (15, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (15, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (15, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (15, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (15, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (15, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (16, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (16, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (16, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (16, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (16, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (16, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (17, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (17, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (17, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (17, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (17, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (17, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (18, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (18, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (18, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (18, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (18, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (18, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (19, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (19, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (19, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (19, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (19, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (19, 6)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (20, 1)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (20, 2)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (20, 3)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (20, 4)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (20, 5)
+GO
+INSERT [dbo].[AlumnoXmateria] ([id_alumno], [id_materia]) VALUES (20, 6)
+GO
+SET IDENTITY_INSERT [dbo].[Materia] ON 
+GO
+INSERT [dbo].[Materia] ([id_materia], [nombre]) VALUES (1, N'Matematica')
+GO
+INSERT [dbo].[Materia] ([id_materia], [nombre]) VALUES (2, N'Ingles')
+GO
+INSERT [dbo].[Materia] ([id_materia], [nombre]) VALUES (3, N'Programacion I')
+GO
+INSERT [dbo].[Materia] ([id_materia], [nombre]) VALUES (4, N'Programacion II')
+GO
+INSERT [dbo].[Materia] ([id_materia], [nombre]) VALUES (5, N'Laboratorio I')
+GO
+INSERT [dbo].[Materia] ([id_materia], [nombre]) VALUES (6, N'Laboratorio II')
+GO
+SET IDENTITY_INSERT [dbo].[Materia] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Material] ON 
+GO
+INSERT [dbo].[Material] ([id_material], [nombre], [descripcion]) VALUES (1, N'Curricula_Laboratorio', N'Unidad1:Normalizacion')
+GO
+INSERT [dbo].[Material] ([id_material], [nombre], [descripcion]) VALUES (2, N'Curricula_Laboratorio2', N'Unidad1:Funciones')
+GO
+INSERT [dbo].[Material] ([id_material], [nombre], [descripcion]) VALUES (3, N'Curricula_Matematica', N'Unidad1:Limites')
+GO
+INSERT [dbo].[Material] ([id_material], [nombre], [descripcion]) VALUES (4, N'Curricula_Ingles', N'Unit1:VerbToBe')
+GO
+INSERT [dbo].[Material] ([id_material], [nombre], [descripcion]) VALUES (5, N'Curricula_Programacion1', N'Unidad1:POO')
+GO
+INSERT [dbo].[Material] ([id_material], [nombre], [descripcion]) VALUES (6, N'Curricula_Programacion2', N'Unidad1:OldbConection')
+GO
+SET IDENTITY_INSERT [dbo].[Material] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Profesor] ON 
+GO
+INSERT [dbo].[Profesor] ([matricula], [apellido], [nombre], [telefono], [email], [dni]) VALUES (1, N'Bustriaso', N'Maximo', N'351-4569852', N'mamason@gmail.com', 26545112)
+GO
+INSERT [dbo].[Profesor] ([matricula], [apellido], [nombre], [telefono], [email], [dni]) VALUES (2, N'Murature', N'Catalina', N'353-5569328', N'camura@gmail.com', 22569331)
+GO
+INSERT [dbo].[Profesor] ([matricula], [apellido], [nombre], [telefono], [email], [dni]) VALUES (3, N'Chami', N'Gerardo', N'2302-465952', N'chager@gmail.com', 19852634)
+GO
+INSERT [dbo].[Profesor] ([matricula], [apellido], [nombre], [telefono], [email], [dni]) VALUES (4, N'Blanc', N'Daniela', N'2954-568923', N'danib@gmail.com', 27852639)
+GO
+SET IDENTITY_INSERT [dbo].[Profesor] OFF
+GO
+INSERT [dbo].[ProfesorXmateria] ([id_profesor], [id_materia]) VALUES (1, 5)
+GO
+INSERT [dbo].[ProfesorXmateria] ([id_profesor], [id_materia]) VALUES (1, 6)
+GO
+INSERT [dbo].[ProfesorXmateria] ([id_profesor], [id_materia]) VALUES (2, 2)
+GO
+INSERT [dbo].[ProfesorXmateria] ([id_profesor], [id_materia]) VALUES (3, 3)
+GO
+INSERT [dbo].[ProfesorXmateria] ([id_profesor], [id_materia]) VALUES (3, 4)
+GO
+INSERT [dbo].[ProfesorXmateria] ([id_profesor], [id_materia]) VALUES (4, 1)
+GO
+SET IDENTITY_INSERT [dbo].[Recurso] ON 
+GO
+INSERT [dbo].[Recurso] ([id_recurso], [id_materia], [id_material], [archivo], [estado]) VALUES (1, 5, 1, N'C:/BDELEARNING/RECURSOS/Curricula_Laboratorio.pdf', 1)
+GO
+INSERT [dbo].[Recurso] ([id_recurso], [id_materia], [id_material], [archivo], [estado]) VALUES (2, 6, 2, N'C:/BDELEARNING/RECURSOS/Curricula_Laboratorio2.pdf', 1)
+GO
+INSERT [dbo].[Recurso] ([id_recurso], [id_materia], [id_material], [archivo], [estado]) VALUES (3, 3, 5, N'C:/BDELEARNING/RECURSOS/Curricula_Programacion.pdf', 1)
+GO
+INSERT [dbo].[Recurso] ([id_recurso], [id_materia], [id_material], [archivo], [estado]) VALUES (4, 4, 6, N'C:/BDELEARNING/RECURSOS/Curricula_Programacion2.pdf', 1)
+GO
+INSERT [dbo].[Recurso] ([id_recurso], [id_materia], [id_material], [archivo], [estado]) VALUES (5, 1, 3, N'C:/BDELEARNING/RECURSOS/Curricula_Matematica.pdf', 1)
+GO
+INSERT [dbo].[Recurso] ([id_recurso], [id_materia], [id_material], [archivo], [estado]) VALUES (6, 2, 4, N'C:/BDELEARNING/RECURSOS/Curricula_Ingles.pdf', 1)
+GO
+SET IDENTITY_INSERT [dbo].[Recurso] OFF
+GO
+INSERT [dbo].[Usuario] ([nombreUsuario], [PASS]) VALUES (21, 26539841)
+GO
+/****** Object:  Index [IX_Recurso]    Script Date: 22/10/2019 4:58:30 ******/
+ALTER TABLE [dbo].[Recurso] ADD  CONSTRAINT [IX_Recurso] UNIQUE NONCLUSTERED 
+(
+	[id_materia] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AlumnoXmateria]  WITH CHECK ADD  CONSTRAINT [FK_AlumnoXmateria_Alumno] FOREIGN KEY([id_alumno])
+REFERENCES [dbo].[Alumno] ([legajo])
+GO
+ALTER TABLE [dbo].[AlumnoXmateria] CHECK CONSTRAINT [FK_AlumnoXmateria_Alumno]
+GO
+ALTER TABLE [dbo].[AlumnoXmateria]  WITH CHECK ADD  CONSTRAINT [FK_AlumnoXmateria_Materia] FOREIGN KEY([id_materia])
+REFERENCES [dbo].[Materia] ([id_materia])
+GO
+ALTER TABLE [dbo].[AlumnoXmateria] CHECK CONSTRAINT [FK_AlumnoXmateria_Materia]
+GO
+ALTER TABLE [dbo].[Descarga]  WITH CHECK ADD  CONSTRAINT [FK_Descarga_Alumno] FOREIGN KEY([id_alumno])
+REFERENCES [dbo].[Alumno] ([legajo])
+GO
+ALTER TABLE [dbo].[Descarga] CHECK CONSTRAINT [FK_Descarga_Alumno]
+GO
+ALTER TABLE [dbo].[Descarga]  WITH CHECK ADD  CONSTRAINT [FK_Descarga_Recurso] FOREIGN KEY([id_recurso])
+REFERENCES [dbo].[Recurso] ([id_recurso])
+GO
+ALTER TABLE [dbo].[Descarga] CHECK CONSTRAINT [FK_Descarga_Recurso]
+GO
+ALTER TABLE [dbo].[ProfesorXmateria]  WITH CHECK ADD  CONSTRAINT [FK_ProfesorXmateria_Materia] FOREIGN KEY([id_materia])
+REFERENCES [dbo].[Materia] ([id_materia])
+GO
+ALTER TABLE [dbo].[ProfesorXmateria] CHECK CONSTRAINT [FK_ProfesorXmateria_Materia]
+GO
+ALTER TABLE [dbo].[ProfesorXmateria]  WITH CHECK ADD  CONSTRAINT [FK_ProfesorXmateria_Profesor] FOREIGN KEY([id_profesor])
+REFERENCES [dbo].[Profesor] ([matricula])
+GO
+ALTER TABLE [dbo].[ProfesorXmateria] CHECK CONSTRAINT [FK_ProfesorXmateria_Profesor]
+GO
+ALTER TABLE [dbo].[ProfesorXmateria]  WITH CHECK ADD  CONSTRAINT [FK_ProfesorXmateria_Recurso] FOREIGN KEY([id_materia])
+REFERENCES [dbo].[Recurso] ([id_materia])
+GO
+ALTER TABLE [dbo].[ProfesorXmateria] CHECK CONSTRAINT [FK_ProfesorXmateria_Recurso]
+GO
+ALTER TABLE [dbo].[Recurso]  WITH CHECK ADD  CONSTRAINT [FK_Recurso_Material] FOREIGN KEY([id_material])
+REFERENCES [dbo].[Material] ([id_material])
+GO
+ALTER TABLE [dbo].[Recurso] CHECK CONSTRAINT [FK_Recurso_Material]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_MateriaBXP]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_MateriaBXP]
+	
+	
+	@materia varchar(50) 
+	
+AS
+BEGIN
+	-- Este sp requiere que se interte el nombre de una materia para saber todos los
+	-- Alumnos que estan inscriptos a la misma
+	SET NOCOUNT ON;
+		SELECT        dbo.Alumno.apellido+','+ dbo.Alumno.nombre AS Alumno
+			FROM            dbo.Alumno INNER JOIN
+                         dbo.AlumnoXmateria ON dbo.Alumno.legajo = dbo.AlumnoXmateria.id_alumno INNER JOIN
+                         dbo.Materia ON dbo.AlumnoXmateria.id_materia = dbo.Materia.id_materia
+						 where dbo.Materia.nombre = @materia
+						 order by Alumno asc
+END
+GO
+/****** Object:  Trigger [dbo].[TGR_AI_NuevoUsuario]    Script Date: 22/10/2019 4:58:30 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TRIGGER [dbo].[TGR_AI_NuevoUsuario]
+   ON  [dbo].[Alumno]
+   FOR INSERT
+AS 
+BEGIN
+
+	declare @legajo int
+	set @legajo = ( select legajo from inserted)
+	declare @pass int
+	set @pass = (select DNI from inserted)
+	
+	
+	insert into Usuario(nombreUsuario,PASS) values(@legajo,@pass)
+	--(select(i.legajo , i.dni) from inserted i)
+
+
+	SET NOCOUNT ON;
+
+
+END
+GO
+ALTER TABLE [dbo].[Alumno] ENABLE TRIGGER [TGR_AI_NuevoUsuario]
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[40] 4[20] 2[20] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = 0
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "a"
+            Begin Extent = 
+               Top = 6
+               Left = 38
+               Bottom = 136
+               Right = 208
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "am"
+            Begin Extent = 
+               Top = 6
+               Left = 246
+               Bottom = 102
+               Right = 416
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "m"
+            Begin Extent = 
+               Top = 102
+               Left = 246
+               Bottom = 198
+               Right = 416
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 11
+         Column = 1440
+         Alias = 900
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VW_ListaAxM'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'VW_ListaAxM'
+GO
